@@ -2,7 +2,8 @@ This is a MSc Bioinformatics project to train and test a convolutional neural ne
 
 # app.py
 
-This file is for the Shiny Python dashboard for the project.
+This file is for the Shiny Python dashboard for the project. The dashboard can be found at:
+https://bareebaree.shinyapps.io/dashboard/
 
 # cb513.csv 
 
