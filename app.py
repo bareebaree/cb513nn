@@ -4,12 +4,19 @@ from faicons import icon_svg
 from shiny import reactive
 from shiny.express import input, render, ui
 import os
+from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
+
 # Load train and test metrics
-
 cwd = os.getcwd()
-
-data_path = os.path.join(cwd,"epoch_data.csv")
+data_path = os.path.join(cwd, "epoch_data.csv")
 df = pd.read_csv(data_path)
+
+# Load test and validation results
+validation_results_path = os.path.join(cwd, "validation_results.csv")
+test_results_path = os.path.join(cwd, "test_results.csv")
+validation_results = pd.read_csv(validation_results_path)
+test_results = pd.read_csv(test_results_path)
 
 # Set up the Shiny UI 
 ui.page_opts(title="Training Metrics Dashboard", fillable=True)
@@ -97,6 +104,40 @@ with ui.layout_columns():
             )
             plot.set_title("Validation Accuracy vs Epoch")
             return plot
+
+# Add confusion matrix plots for validation and test results
+with ui.layout_columns():
+    # Card for Validation Confusion Matrix
+    with ui.card(full_screen=True):
+        ui.card_header("Validation Confusion Matrix")
+
+        @render.plot
+        def validation_confusion_matrix():
+            true_labels = validation_results["True Label"]
+            predicted_labels = validation_results["Predicted Label"]
+            cm = confusion_matrix(true_labels, predicted_labels, labels=["Helix", "Sheet", "Coil"])
+            fig, ax = plt.subplots()
+            sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=["Helix", "Sheet", "Coil"], yticklabels=["Helix", "Sheet", "Coil"], ax=ax)
+            ax.set_xlabel("Predicted")
+            ax.set_ylabel("True")
+            ax.set_title("Validation Confusion Matrix")
+            return fig
+
+    # Card for Test Confusion Matrix
+    with ui.card(full_screen=True):
+        ui.card_header("Test Confusion Matrix")
+
+        @render.plot
+        def test_confusion_matrix():
+            true_labels = test_results["True Label"]
+            predicted_labels = test_results["Predicted Label"]
+            cm = confusion_matrix(true_labels, predicted_labels, labels=["Helix", "Sheet", "Coil"])
+            fig, ax = plt.subplots()
+            sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=["Helix", "Sheet", "Coil"], yticklabels=["Helix", "Sheet", "Coil"], ax=ax)
+            ax.set_xlabel("Predicted")
+            ax.set_ylabel("True")
+            ax.set_title("Test Confusion Matrix")
+            return fig
 
 # Include custom CSS for additional styling
 ui.include_css("styles.css")
