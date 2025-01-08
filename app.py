@@ -38,35 +38,6 @@ with ui.sidebar(title="Filter controls"):
         loss = df.loc[df["epoch"] == selected_epoch, "loss"].values
         return f"Loss at Epoch {selected_epoch}: {loss[0] if len(loss) > 0 else 'N/A'}"
 
-# Define the main dashboard layout
-with ui.layout_column_wrap(fill=False):
-    # Display a value box for total epochs
-    with ui.value_box(showcase=icon_svg("chart-line")):
-        "Total Epochs"
-
-        @render.text
-        def total_epochs():
-            # Render the total number of epochs from the dataset
-            return f"{df['epoch'].max()}"
-
-    # Display a value box for maximum validation accuracy
-    with ui.value_box(showcase=icon_svg("chart-bar")):
-        "Max Validation Accuracy"
-
-        @render.text
-        def max_val_accuracy():
-            # Render the maximum validation accuracy from the dataset
-            return f"{df['validation_accuracy'].max():.2f}"
-
-    # Display a value box for minimum loss
-    with ui.value_box(showcase=icon_svg("chart-area")):
-        "Min Loss"
-
-        @render.text
-        def min_loss():
-            # Render the minimum loss value from the dataset
-            return f"{df['loss'].min():.2f}"
-
 # Create the layout for plots
 with ui.layout_columns():
     # Card for Loss vs Epoch plot
@@ -116,11 +87,13 @@ with ui.layout_columns():
             true_labels = validation_results["True Label"]
             predicted_labels = validation_results["Predicted Label"]
             cm = confusion_matrix(true_labels, predicted_labels, labels=["Helix", "Sheet", "Coil"])
-            fig, ax = plt.subplots()
-            sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=["Helix", "Sheet", "Coil"], yticklabels=["Helix", "Sheet", "Coil"], ax=ax)
-            ax.set_xlabel("Predicted")
-            ax.set_ylabel("True")
-            ax.set_title("Validation Confusion Matrix")
+            fig, ax = plt.subplots(figsize=(10, 12))  # Increase figure size for better scaling
+            sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=["Helix", "Sheet", "Coil"], yticklabels=["Helix", "Sheet", "Coil"], ax=ax, cbar_kws={'shrink': 0.8})
+            ax.set_xlabel("Predicted", fontsize=11)
+            ax.set_ylabel("True", fontsize=11)
+            ax.set_title("Validation Confusion Matrix", fontsize=11)
+            ax.tick_params(axis='both', which='major', labelsize=6)
+            plt.xticks(rotation=0)  # Make x-axis tick labels horizontal
             return fig
 
     # Card for Test Confusion Matrix
@@ -132,11 +105,13 @@ with ui.layout_columns():
             true_labels = test_results["True Label"]
             predicted_labels = test_results["Predicted Label"]
             cm = confusion_matrix(true_labels, predicted_labels, labels=["Helix", "Sheet", "Coil"])
-            fig, ax = plt.subplots()
-            sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=["Helix", "Sheet", "Coil"], yticklabels=["Helix", "Sheet", "Coil"], ax=ax)
-            ax.set_xlabel("Predicted")
-            ax.set_ylabel("True")
-            ax.set_title("Test Confusion Matrix")
+            fig, ax = plt.subplots(figsize=(10, 12))  # Increase figure size for better scaling
+            sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=["Helix", "Sheet", "Coil"], yticklabels=["Helix", "Sheet", "Coil"], ax=ax, cbar_kws={'shrink': 0.8})
+            ax.set_xlabel("Predicted", fontsize=11)
+            ax.set_ylabel("True", fontsize=11)
+            ax.set_title("Test Confusion Matrix", fontsize=11)
+            ax.tick_params(axis='both', which='major', labelsize=6)
+            plt.xticks(rotation=0)  # Make x-axis tick labels horizontal
             return fig
 
 # Include custom CSS for additional styling
