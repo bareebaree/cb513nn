@@ -1,0 +1,7 @@
+faicons
+shiny
+seaborn
+pandas
+matplotlib
+scikit-learn
+
