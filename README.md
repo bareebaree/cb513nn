@@ -1,5 +1,9 @@
 This is a MSc Bioinformatics project to train and test a convolutional neural network to predict protein secondary structure using DSSP3 classification (3 classes, coils, helices, sheets)
 
+The architecture for this CNN is based off:
+
+https://github.com/alrojo/CB513
+
 # app.py
 
 This file is for the Shiny Python dashboard for the project. The dashboard can be found at:
