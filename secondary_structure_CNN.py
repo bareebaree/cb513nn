@@ -17,11 +17,19 @@ import os
 
 # One hot encoding
 def pad_sequence(sequence, max_length, padding_value=0):
+"""
+Pad a sequence with value 0 to ensure they all have the same length for inputs into neural network
+    
     while len(sequence) < max_length:
         sequence.append(padding_value)
     return sequence
 
 def one_hot_encode_sequence(sequence):
+    """
+    Enumerates a sequence of proteins into a binary vector where each amino acid is represented by a binary vector.
+    
+    """
+    
     return np.array([[1 if i == aa_to_index[aa] else 0 for i in range(len(amino_acids))] for aa in sequence])
 
 def one_hot_encode_dssp3(dssp3_sequence):
